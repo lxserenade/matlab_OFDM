@@ -73,30 +73,31 @@ end
 X1_hat=zeros(N,1);
 for i=1:N
     
-%  %%%16 QAM硬判决%%%
-% threshold_r=max(real(X1))/2;
-% threshold_i=max(imag(X1))/2;
-% if ((abs(real(X1(i)))<=threshold_r)&&(abs(imag(X1(i)))<=threshold_i))
-% X1_hat(i)=0.3162*sign(real(X1(i)))+0.3162*sign(imag(X1(i)))*1i;
-% elseif ((abs(real(X1(i)))<threshold_r)&&(abs(imag(X1(i)))>threshold_i))
-% X1_hat(i)=0.3162*sign(real(X1(i)))+0.9487*sign(imag(X1(i)))*1i;
-% elseif ((abs(real(X1(i)))>threshold_r)&&(abs(imag(X1(i)))<threshold_i))
-% X1_hat(i)=0.9487*sign(real(X1(i)))+0.3162*sign(imag(X1(i)))*1i;
-% elseif ((abs(real(X1(i)))>threshold_r)&&(abs(imag(X1(i)))>threshold_i))
-% X1_hat(i)=0.9487*sign(real(X1(i)))+0.9487*sign(imag(X1(i)))*1i; 
-% end
-% 
-%  
+ %%%16 QAM硬判决%%%
+threshold_r=max(real(X1))/2;
+threshold_i=max(imag(X1))/2;
+if ((abs(real(X1(i)))<=threshold_r)&&(abs(imag(X1(i)))<=threshold_i))
+X1_hat(i)=1*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
+elseif ((abs(real(X1(i)))<threshold_r)&&(abs(imag(X1(i)))>threshold_i))
+X1_hat(i)=1*sign(real(X1(i)))+3*sign(imag(X1(i)))*1i;
+elseif ((abs(real(X1(i)))>threshold_r)&&(abs(imag(X1(i)))<threshold_i))
+X1_hat(i)=3*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
+elseif ((abs(real(X1(i)))>threshold_r)&&(abs(imag(X1(i)))>threshold_i))
+X1_hat(i)=3*sign(real(X1(i)))+3*sign(imag(X1(i)))*1i; 
+end
+
+ 
     
     %%%QPSK硬判决%%%
-    % X1_hat(i)=0.707*sign(real(X1(i)))+0.707*sign(imag(X1(i)))*1i;
-     X1_hat(i)=1*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
-    %%%%
+%     % X1_hat(i)=0.707*sign(real(X1(i)))+0.707*sign(imag(X1(i)))*1i;
+%      X1_hat(i)=1*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
+%     %%%%
 
 end
  Y3ici=A3ici*X1_hat; %ici干扰项
  Y3diag=Y1-Y3ici;
 end
+
 
 %%%第一步循环结束 得到X1的判决X1_hat 
 Adiag=diag(diag(A1));
@@ -112,29 +113,29 @@ Yici=Aici*X1_hat;
 Ydiag=Y1-Yici;
 
 for i=1:N   
-
-%     
-%  %%16 QAM硬判决%%%
-% threshold_r=max(real(X1_hat))/2;
-% threshold_i=max(imag(X1_hat))/2;
-% if ((abs(real(X1_hat(i)))<=threshold_r)&&(abs(imag(X1_hat(i)))<=threshold_i))
-% X1_hat(i)=0.3162*sign(real(X1_hat(i)))+0.3162*sign(imag(X1_hat(i)))*1i;
-% elseif ((abs(real(X1_hat(i)))<threshold_r)&&(abs(imag(X1_hat(i)))>threshold_i))
-% X1_hat(i)=0.3162*sign(real(X1_hat(i)))+0.9487*sign(imag(X1_hat(i)))*1i;
-% elseif ((abs(real(X1_hat(i)))>threshold_r)&&(abs(imag(X1_hat(i)))<threshold_i))
-% X1_hat(i)=0.9487*sign(real(X1_hat(i)))+0.3162*sign(imag(X1_hat(i)))*1i;
-% elseif ((abs(real(X1_hat(i)))>threshold_r)&&(abs(imag(X1_hat(i)))>threshold_i))
-% X1_hat(i)=0.9487*sign(real(X1_hat(i)))+0.9487*sign(imag(X1_hat(i)))*1i; 
-% end
-%   
-     %%%QPSK硬判决%%%
-    % X1_hat(i)=0.707*sign(real(X1(i)))+0.707*sign(imag(X1(i)))*1i;
-     X1_hat(i)=1*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
-    %%%%
+  
+%%%16 QAM硬判决%%%
+threshold_r=max(real(X1_hat))/2;
+threshold_i=max(imag(X1_hat))/2;
+if ((abs(real(X1_hat(i)))<=threshold_r)&&(abs(imag(X1_hat(i)))<=threshold_i))
+X1_hat(i)=1*sign(real(X1_hat(i)))+1*sign(imag(X1_hat(i)))*1i;
+elseif ((abs(real(X1_hat(i)))<threshold_r)&&(abs(imag(X1_hat(i)))>threshold_i))
+X1_hat(i)=1*sign(real(X1_hat(i)))+3*sign(imag(X1_hat(i)))*1i;
+elseif ((abs(real(X1_hat(i)))>threshold_r)&&(abs(imag(X1_hat(i)))<threshold_i))
+X1_hat(i)=3*sign(real(X1_hat(i)))+1*sign(imag(X1_hat(i)))*1i;
+elseif ((abs(real(X1_hat(i)))>threshold_r)&&(abs(imag(X1_hat(i)))>threshold_i))
+X1_hat(i)=3*sign(real(X1_hat(i)))+3*sign(imag(X1_hat(i)))*1i; 
+end
+  
+%      %%%QPSK硬判决%%%
+%     % X1_hat(i)=0.707*sign(real(X1(i)))+0.707*sign(imag(X1(i)))*1i;
+%      X1_hat(i)=1*sign(real(X1(i)))+1*sign(imag(X1(i)))*1i;
+%     %%%%
 
 end
 
-X1_hat= diag(1./diag(conj(Adiag)).*diag(Adiag)+1/SNR)*Ydiag;
+X1_hat= 1./((conj(diag(Adiag)).*diag(Adiag))+1/SNR).*Ydiag;
+
 end
 
 
@@ -145,8 +146,17 @@ end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% function X = ideal_equalization(Y,matrix,SNR)
+% X=(matrix^-1)*Y;
+% end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 
 % function X = ideal_equalization(Y,matrix,SNR)
-% X=(matrix^-1)*Y;
+% X=matrix'*(matrix*matrix'+1/SNR*eye(size(matrix,1)))^-1*Y;
+% 
 % end

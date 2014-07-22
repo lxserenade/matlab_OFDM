@@ -4,24 +4,29 @@ clc;
 
 N=256;
 N_F=1000;
-M = 4;                      % Size of signal constellation
+M = 16;                      % Size of signal constellation
 k = log2(M);                % Number of bits per symbol
 n = N*N_F;                  % Number of bits to process
 numSamplesPerSymbol = 1;    % Oversampling factor
 rng('default')              % Use default random number generator
 dataIn = randi([0 1],n,1);  % Generate vector of binary data
-dataInMatrix = reshape(dataIn, length(dataIn)/k, k); % Reshape data into binary 4-tuples
-dataSymbolsIn = bi2de(dataInMatrix);            % Convert to integers
+dataSymbolsIn = dataIn;            
 
 
 
 %%%%%% Modulation %%%%
-dataMod = qammod(dataSymbolsIn, M);
+MOD=comm.RectangularQAMModulator;
+MOD.NormalizationMethod='Average Power';
+MOD.BitInput=true;
+dataMod=step(MOD,dataSymbolsIn);
+%dataMod = qammod(dataSymbolsIn, M);
 %%%%%%%%%%%%%%%%%%%%
 
 %%%% SC %%%%%%%%
 %dataMod=ifft(dataMod);
 %%%%%%%%%%%%%%
+
+
 
 dataMod=reshape(dataMod,N,size(dataMod,1)/N);
 
@@ -65,20 +70,22 @@ for i=1:size(dataMod,2)
     %%%%%%%%%%%%%%%%%%%%%%%%
     
     
+    receivedSignal=receivedSignal(N/8+1:end);   %remove cp
+    receivedSignal=fft(receivedSignal);
     
-    %%%  equalization   %%%%%%%%%%%%
-     matrix=catchchannel(int32(chan.PathDelays/chan.InputSamplePeriod),...
+    
+    %%%%%%%%%  equalization   %%%%%%%%%%%%
+    matrix=catchchannel(int32(chan.PathDelays/chan.InputSamplePeriod),...
                             size(receivedSignal,1),...
                             chan.PathGains);
-     receivedSignal=ideal_equalization(receivedSignal,matrix,snr);
+    receivedSignal=ideal_equalization(receivedSignal,matrix,snr);
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%     
+     
     
     
     %%%%%%%%%% fft %%%%%%%%%%%%%%%%%%
     %%% remove cp%%%%%%
-    receivedSignal=receivedSignal(N/8+1:end);   %remove cp
-    receivedSignal=fft(receivedSignal);
+
     
     
 %     %%%  plot constellation %%%%%%%%%%%
@@ -96,10 +103,16 @@ end
 %all_data=fft(all_data);
 
 %%%%%  demodulation %%%%%%%%
-dataSymbolsOut = qamdemod(all_data, M);
+DEM=comm.RectangularQAMDemodulator;
+DEM.BitOutput=true;
+%DEM.DecisionMethod='Approximate log-likelihood ratio';
+DEM.NormalizationMethod='Average Power';
+%DEM.OutputDataType=
+dataSymbolsOut=step(DEM,all_data);
+%dataSymbolsOut = qamdemod(all_data, M);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
- 
-dataOutMatrix = de2bi(dataSymbolsOut,k);
+dataOutMatrix=dataSymbolsOut;
+%dataOutMatrix = de2bi(dataSymbolsOut,k);
 dataOut = dataOutMatrix(:);              % Return data in column vector
 
 
